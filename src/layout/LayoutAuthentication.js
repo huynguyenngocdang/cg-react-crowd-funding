@@ -1,10 +1,18 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
+import PropTypes from "prop-types";
+import { withErrorBoundary } from "react-error-boundary";
+import ErrorComponent from "../components/common/ErrorComponent";
 const LayoutAuthentication = (props) => {
   const { children, heading = "" } = props;
   return (
-    <div className="w-full min-h-screen bg-lite p-10">
+    <div className="relative w-full min-h-screen p-10 bg-lite isolate">
+      <img
+        src="/elipse.png"
+        alt="bg"
+        className="hidden pointer-events-none absolute bottom-0 right-0 left-0 z-[-1px]"
+      />
+
       <Link to="/" className="inline-block mb-5 lg:mb-16">
         <img srcSet="/logo.png" alt="crowfunding-app" />
       </Link>
@@ -18,4 +26,11 @@ const LayoutAuthentication = (props) => {
   );
 };
 
-export default LayoutAuthentication;
+LayoutAuthentication.propTypes = {
+  heading: PropTypes.string,
+  children: PropTypes.node,
+};
+
+export default withErrorBoundary(LayoutAuthentication, {
+  FallbackComponent: ErrorComponent,
+});

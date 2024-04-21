@@ -1,15 +1,9 @@
 import React from "react";
 import LayoutAuthentication from "../layout/LayoutAuthentication";
+import { Link } from "react-router-dom";
 
 const SignInPage = () => {
-  return (
-    <LayoutAuthentication heading="SignIn">
-      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nisi quos, porro
-      nesciunt consectetur omnis dolorem magnam. Porro, tempora hic? Sequi
-      architecto rerum magnam vel nam vero exercitationem! Magnam, totam.
-      Asperiores!
-    </LayoutAuthentication>
-  );
+  return <LayoutAuthentication heading="SignIn"></LayoutAuthentication>;
 };
 
 export default SignInPage;
