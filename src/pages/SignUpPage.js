@@ -1,25 +1,57 @@
-import React from "react";
-import LayoutAuthentication from "layout/LayoutAuthentication";
+import { Button } from "components/button";
+import { Checkbox } from "components/checkbox";
+import { IconEyeToggle } from "components/icons";
+import { Input } from "components/input";
+import { Label } from "components/label";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { Label } from "components/label";
-import { Input } from "components/input";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 import FormGroup from "components/common/FormGroup";
-import Button from "components/button/Button";
+import LayoutAuthentication from "layout/LayoutAuthentication";
+import React from "react";
+import useToggleValue from "hooks/useToggleValue";
+import yupMessages from "constants/yupMessages";
+
+const schema = yup.object({
+  name: yup.string().required(yupMessages.nameRequire),
+  email: yup
+    .string()
+    .email(yupMessages.emailSyntax)
+    .required(yupMessages.emailRequire),
+  password: yup.string().required(yupMessages.passwordRequire),
+});
 
 const SignUpPage = () => {
   const {
     handleSubmit,
     control,
-    formState: { isValid, isSubmitting },
-  } = useForm({});
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
   const handleSignUp = (values) => {
     console.log("🚀 ~ SignUpPage ~ values:", values);
   };
 
+  const { value: acceptTerm, handleToggleValue: handleToggleTerm } =
+    useToggleValue();
+
+  const { value: showPassword, handleToggleValue: handleTogglePassword } =
+    useToggleValue();
+
+  // const [acceptTerm, setAcceptTerm] = useState(false);
+  // const [showPassword, setShowPassword] = useState(false);
+  // const handleToogleTerm = () => {
+  //   setAcceptTerm(!acceptTerm);
+  // };
+  // const handleTogglePassword = () => {
+  //   setShowPassword(!showPassword);
+  // };
+  console.log(errors);
   return (
     <LayoutAuthentication heading="SignUp">
-      <p className="mb-6 text-xs font-normal font-medium text-center lg:text-sm text-text3 lg:mb-8">
+      <p className="mb-6 text-xs lg:font-normal font-medium text-center lg:text-sm text-text3 lg:mb-8">
         Already have an account?{" "}
         <Link to="/sign-in" className="font-medium underline text-primary">
           Sign in
@@ -38,7 +70,8 @@ const SignUpPage = () => {
           <Input
             control={control}
             name="name"
-            placeholder="Input your full name here"
+            placeholder="John Doe"
+            error={errors.name?.message}
           ></Input>
         </FormGroup>
         <FormGroup>
@@ -48,6 +81,7 @@ const SignUpPage = () => {
             name="email"
             type="email"
             placeholder="example@gmail.com"
+            error={errors.email?.message}
           ></Input>
         </FormGroup>
         <FormGroup>
@@ -55,18 +89,26 @@ const SignUpPage = () => {
           <Input
             control={control}
             name="password"
-            type="password"
+            type={`${showPassword ? "text" : "password"}`}
             placeholder="create a password"
-          ></Input>
+            error={errors.password?.message}
+          >
+            <IconEyeToggle
+              open={showPassword}
+              onClick={handleTogglePassword}
+            ></IconEyeToggle>
+          </Input>
         </FormGroup>
         <div className="flex items-start p-2 mb-5 gap-x-5">
-          <span className="inline-block w-5 h-5 border rounded border-text4"></span>
-          <p className="flex-1 text-sm font-normal text-text2">
-            I agree to the{" "}
-            <span className="underline text-secondary">Terms of Use</span> and
-            have read and understand the{" "}
-            <span className="underline text-secondary">Privacy policy</span>
-          </p>
+          <Checkbox name="term" checked={acceptTerm} onClick={handleToggleTerm}>
+            <p className="flex-1 text-sm font-normal text-text2">
+              I agree to the{" "}
+              <span className="underline text-secondary">Terms of Use</span> and
+              have read and understand the{" "}
+              <span className="underline text-secondary">Privacy policy</span>
+            </p>
+          </Checkbox>
+          {/* <span className="inline-block w-5 h-5 border rounded border-text4"></span> */}
         </div>
         <Button type="submit" className="w-full bg-primary">
           Create my account

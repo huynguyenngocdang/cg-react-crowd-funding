@@ -1,1 +1,1 @@
-export const { default: Button } = require("./button");
+export const { default: Button } = require("./Button");
