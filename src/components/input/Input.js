@@ -2,6 +2,7 @@ import React from "react";
 import { useController } from "react-hook-form";
 import PropTypes from "prop-types";
 import { ErrorBoundary, withErrorBoundary } from "react-error-boundary";
+import classNames from "utils/classNames";
 
 const Input = (props) => {
   const {
@@ -23,22 +24,29 @@ const Input = (props) => {
       <input
         id={name}
         type={type}
-        className={`w-full px-6 py-4 text-sm font-medium border rounded-xl text-text1 placeholder:text-text4 dark:placeholder:text-text2 dark:text-white bg-transparent ${
+        className={classNames(
+          "w-full px-6 py-4 text-sm font-medium border rounded-xl text-text1 placeholder:text-text4 dark:placeholder:text-text2 dark:text-white bg-transparent",
           error.length > 0
             ? "border-error"
-            : "border-strock dark:border-darkStroke"
-        } ${children ? "pr-16" : ""}`}
+            : "border-strock dark:border-darkStroke",
+          children ? "pr-16" : ""
+        )}
+        // className={`w-full px-6 py-4 text-sm font-medium border rounded-xl text-text1 placeholder:text-text4 dark:placeholder:text-text2 dark:text-white bg-transparent ${
+        //   error.length > 0
+        //     ? "border-error"
+        //     : "border-strock dark:border-darkStroke"
+        // } ${children ? "pr-16" : ""}`}
         placeholder={error.length > 0 ? "" : placeholder}
         {...rest}
         {...field}
       />
       {error.length > 0 && (
-        <span className="absolute text-sm font-medium text-error top-2/4 -translate-y-2/4 left-6 pointer-events-none error-input">
+        <span className="absolute text-sm font-medium pointer-events-none text-error top-2/4 -translate-y-2/4 left-6 error-input">
           {error}
         </span>
       )}
       {children && (
-        <span className="absolute right-6 top-2/4 -translate-y-2/4 cursor-pointer select-none">
+        <span className="absolute cursor-pointer select-none right-6 top-2/4 -translate-y-2/4">
           {children}
         </span>
       )}
