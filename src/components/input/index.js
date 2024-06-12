@@ -1,1 +1,4 @@
-export const { default: Input } = require("./Input");
+import Input from "./Input";
+import Textarea from "./Textarea";
+
+export { Input, Textarea };

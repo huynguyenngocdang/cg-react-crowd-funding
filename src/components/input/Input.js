@@ -1,7 +1,8 @@
 import React from "react";
 import { useController } from "react-hook-form";
 import PropTypes from "prop-types";
-import { ErrorBoundary, withErrorBoundary } from "react-error-boundary";
+import { withErrorBoundary } from "react-error-boundary";
+import ErrorComponent from "components/common/ErrorComponent";
 import classNames from "utils/classNames";
 
 const Input = (props) => {
@@ -25,18 +26,13 @@ const Input = (props) => {
         id={name}
         type={type}
         className={classNames(
-          "w-full px-6 py-4 text-sm font-medium border rounded-xl text-text1 placeholder:text-text4 dark:placeholder:text-text2 dark:text-white bg-transparent",
+          "w-full px-6 py-4 text-sm font-medium border rounded-xl placeholder:text-text4 dark:placeholder:text-text2 dark:text-white bg-transparent",
           error.length > 0
-            ? "border-error"
-            : "border-strock dark:border-darkStroke",
+            ? "border-error text-error"
+            : "border-strock text-text1 dark:border-darkStroke",
           children ? "pr-16" : ""
         )}
-        // className={`w-full px-6 py-4 text-sm font-medium border rounded-xl text-text1 placeholder:text-text4 dark:placeholder:text-text2 dark:text-white bg-transparent ${
-        //   error.length > 0
-        //     ? "border-error"
-        //     : "border-strock dark:border-darkStroke"
-        // } ${children ? "pr-16" : ""}`}
-        placeholder={error.length > 0 ? "" : placeholder}
+        placeholder={error.length <= 0 ? placeholder : ""}
         {...rest}
         {...field}
       />
@@ -53,14 +49,13 @@ const Input = (props) => {
     </div>
   );
 };
-
 Input.propTypes = {
   name: PropTypes.string,
   type: PropTypes.string,
   error: PropTypes.string,
   control: PropTypes.any.isRequired,
 };
-
 export default withErrorBoundary(Input, {
-  FallbackComponent: <ErrorBoundary></ErrorBoundary>,
+  // FallbackComponent: <ErrorComponent></ErrorComponent>,
+  FallbackComponent: ErrorComponent,
 });

@@ -1,25 +1,25 @@
+import useToggleValue from "hooks/useToggleValue";
 import React from "react";
 import LayoutAuthentication from "../layout/LayoutAuthentication";
-import { Link } from "react-router-dom";
-import { Button, ButtonGoogle } from "components/button";
 import FormGroup from "components/common/FormGroup";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 import { Label } from "components/label";
 import { Input } from "components/input";
-import * as yup from "yup";
-import yupMessages from "constants/yupMessages";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { IconEyeToggle } from "components/icons";
-import useToggleValue from "hooks/useToggleValue";
+import { Button, ButtonGoogle } from "components/button";
+import { useDispatch } from "react-redux";
+import { authLogin } from "store/auth/auth-slice";
 
 const schema = yup.object({
-  email: yup
+  email: yup.string().email("").required("This field is required"),
+  password: yup
     .string()
-    .email(yupMessages.emailSyntax)
-    .required(yupMessages.emailRequire),
-  password: yup.string().required(yupMessages.passwordRequire),
+    .required("This field is required")
+    .min(8, "Password must be 8 character "),
 });
-
 const SignInPage = () => {
   const {
     handleSubmit,
@@ -27,29 +27,29 @@ const SignInPage = () => {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
+    mode: "onSubmit",
   });
-  const handleSignIn = (values) => {
-    console.log("🚀 ~ SignInPage ~ values:", values);
-  };
-
   const { value: showPassword, handleToggleValue: handleTogglePassword } =
     useToggleValue();
+  const dispatch = useDispatch();
+  const handleSignIn = (values) => {
+    dispatch(authLogin(values));
+  };
   return (
     <LayoutAuthentication heading="Welcome Back!">
-      <p className="mb-6 text-xs font-medium text-center lg:font-normal lg:text-sm text-text3 lg:mb-8">
-        Don't have an account?{" "}
-        <Link to="/sign-up" className="font-medium underline text-primary">
+      <p className="mb-6 text-xs font-normal text-center lg:text-sm text-text3 lg:mb-8">
+        Dont have an account?{" "}
+        <Link to="/register" className="font-medium underline text-primary">
           Sign up
         </Link>
-        <ButtonGoogle text="Sign in with Google"></ButtonGoogle>
       </p>
+      <ButtonGoogle text="Sign in with google"></ButtonGoogle>
       <form onSubmit={handleSubmit(handleSignIn)}>
         <FormGroup>
           <Label htmlFor="email">Email *</Label>
           <Input
             control={control}
             name="email"
-            type="email"
             placeholder="example@gmail.com"
             error={errors.email?.message}
           ></Input>
@@ -60,7 +60,7 @@ const SignInPage = () => {
             control={control}
             name="password"
             type={`${showPassword ? "text" : "password"}`}
-            placeholder="create a password"
+            placeholder="Enter Password"
             error={errors.password?.message}
           >
             <IconEyeToggle
@@ -72,11 +72,11 @@ const SignInPage = () => {
         <FormGroup>
           <div className="text-right">
             <span className="inline-block text-sm font-medium text-primary">
-              Forgot Password
+              Forgot password
             </span>
           </div>
         </FormGroup>
-        <Button type="submit" className="w-full bg-primary">
+        <Button className="w-full" kind="primary" type="submit">
           Sign in
         </Button>
       </form>
